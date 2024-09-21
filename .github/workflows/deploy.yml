@@ -26,11 +26,16 @@ jobs:
         run: |
           cd ultimate-by-example
           mdbook build
+      - name: Build Rulebook
+        run: |
+          cd rules-of-ultimate
+          dx build --release
       - name: Assemble Pages
         run: |
           mkdir pages
           cp index.html pages/
           mv ultimate-by-example/book/ pages/book/
+          mv rules-of-ultimate/dist/ pages/rulebook/
       - name: Setup Pages
         uses: actions/configure-pages@v4
       - name: Upload artifact
