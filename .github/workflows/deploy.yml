@@ -12,21 +12,24 @@ jobs:
       pages: write  # To push to a GitHub Pages site
       id-token: write # To update the deployment status
     steps:
-      - name: Install dependencies
-        run: |
-          curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
-          cargo install mdbook dioxus-cli
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
+      - name: Install latest mdbook
+        run: |
+          tag=$(curl 'https://api.github.com/repos/rust-lang/mdbook/releases/latest' | jq -r '.tag_name')
+          url="https://github.com/rust-lang/mdbook/releases/download/${tag}/mdbook-${tag}-x86_64-unknown-linux-gnu.tar.gz"
+          mkdir mdbook
+          curl -sSL $url | tar -xz --directory=./mdbook
+          echo `pwd`/mdbook >> $GITHUB_PATH
       - name: Build Ultimate by Example
         run: |
           cd ultimate-by-example
           mdbook build
-      - name: Build Ultimate Rulebook
-        run: |
-          cd rules-of-ultimate
-          dx build --release
+    #   - name: Build Ultimate Rulebook
+    #     run: |
+    #       cd rules-of-ultimate
+    #       dx build --release
       - name: Assemble Pages
         run: |
           mkdir pages
