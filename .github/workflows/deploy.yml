@@ -26,6 +26,11 @@ jobs:
         run: |
           cd ultimate-by-example
           mdbook build
+      - name: Assemble Pages
+        run: |
+          mkdir pages
+          cp index.html pages/
+          mv ultimate-by-example/book/ pages/book/
       - name: Setup Pages
         uses: actions/configure-pages@v4
       - name: Upload artifact
